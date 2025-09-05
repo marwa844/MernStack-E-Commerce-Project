@@ -5,6 +5,7 @@ import { setCategory } from "./services/categoryServices.js";
 import { setInitialProducts } from "./services/productServices.js";
 import { categoryRouter } from "./routes/categoryRoute.js";
 import { productRoute } from "./routes/productRoute.js";
+import { cartRouter } from "./routes/cartRoute.js";
 
 const app = express();
 const port = 3001;
@@ -27,8 +28,12 @@ app.use("/user", userRoute);
 //category router
 app.use("/categoy", categoryRouter);
 
-// app router
+// product router
 app.use("/product", productRoute);
+
+// cart router
+app.use("/cart", cartRouter);
+
 
 app.listen(port, () => {
   console.log("Server is working");
