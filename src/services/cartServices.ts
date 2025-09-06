@@ -1,4 +1,6 @@
+import type { ObjectId } from "mongoose";
 import { cartModel } from "../models/cartModel.js";
+import { productModel } from "../models/productModel.js";
 
 // create cart for user
 export interface ICreateCart {
@@ -22,4 +24,155 @@ export const getActiveCartForUser = async ({ userId }: IGetActiveCart) => {
     getCart = await createCartForUSer({ userId });
   }
   return getCart;
+};
+
+//add Item to cart
+export interface IAddItemToCart {
+  userId: string;
+  productId: any;
+  quantity: string;
+}
+
+export const addItemToCart = async ({
+  productId,
+  quantity,
+  userId,
+}: IAddItemToCart) => {
+  // get cart for user
+  const cart = await getActiveCartForUser({ userId });
+
+  // check item is exit in db
+  const item = cart.items.find((p) => p.product.toString() === productId);
+  if (item) {
+    return { data: " Item is already exit", statusCode: 400 };
+  }
+
+  // check about item in db
+  const product = await productModel.findById(productId);
+  if (!product) {
+    return { data: " Product isn't exit", statusCode: 400 };
+  }
+
+  if (product.stock < parseInt(quantity)) {
+    return { data: "low stock", statusCode: 400 };
+  }
+
+  // add item to cart
+  cart.items.push({
+    product: productId,
+    unitprice: product.onsale ? product.sale : product.price,
+    quantity: parseInt(quantity),
+  });
+  // update to cart
+  cart.totalAmount += product.price * parseInt(quantity);
+  const updateCart = await cart.save();
+  return { data: updateCart, statusCode: 201 };
+};
+
+// update items in carr
+
+interface IupdateItemInCart {
+  userId: string;
+  productId: string;
+  quantity: string;
+}
+export const updateItemInCart = async ({
+  userId,
+  productId,
+  quantity,
+}: IupdateItemInCart) => {
+  //get cart for user
+  const cart = await getActiveCartForUser({ userId });
+
+  // check item in cart
+  const exitItemInCart = cart.items.find(
+    (p) => p.product.toString() == productId
+  );
+  if (!exitItemInCart) {
+    return { data: "Product not exit in cart", statusCode: 400 };
+  }
+
+  // check product in db
+  const product = await productModel.findById(productId);
+  if (!product) {
+    return { data: "Product not exit in Db", statusCode: 400 };
+  }
+
+  // check stock before update
+  if (product.stock < parseInt(quantity)) {
+    return { data: "Low Stock in db", statusCode: 400 };
+  }
+  // upade product quantity
+  exitItemInCart.quantity = parseInt(quantity);
+
+  // get other total amount in cart
+  const otherItemsIncart = cart.items.filter(
+    (p) => p.product.toString() !== productId
+  );
+  let totalOtherItems = otherItemsIncart.reduce((sum, p) => {
+    sum += p.quantity * p.unitprice;
+    return sum;
+  }, 0);
+
+  // get total exit product
+  const totalExitProduct = product.price * parseInt(quantity);
+  cart.totalAmount = totalOtherItems + totalExitProduct;
+  const updateCart = await cart.save();
+  return { data: updateCart, statusCode: 200 };
+};
+
+// Delete Item in cart
+interface IDeleteItem {
+  userId: string;
+  productId: string;
+}
+export const deleteItemInCart = async ({ userId, productId }: IDeleteItem) => {
+  // get cart for user
+  const cart = await getActiveCartForUser({ userId });
+
+  // check item is exit in cart
+  const item = cart.items.find((p) => p.product.toString() === productId);
+  if (!item) {
+    return { data: " Item isn't exit", statusCode: 400 };
+  }
+
+  // remove all items from cart
+  const newItems = cart.items.filter((p) => p.product !== item.product);
+
+  cart.items = newItems;
+
+  // update summary
+
+  const tAmount = newItems.reduce((sum, p) => {
+    sum += p.unitprice * p.quantity;
+    return sum;
+  }, 0);
+
+  cart.totalAmount = tAmount;
+
+  // save cart
+  const updateCart = await cart.save();
+  return { data: updateCart, statusCode: 200 };
+};
+
+// Delete All Items in cart
+interface IClearCart {
+  userId: string;
+}
+export const claerCart = async ({ userId }: IClearCart) => {
+  // get cart for user
+  const cart = await getActiveCartForUser({ userId });
+
+  // remove  items from cart
+
+  cart.items = [];
+
+  // update summary
+
+  const tAmount = 0;
+  cart.totalAmount = tAmount;
+
+  // save cart
+  const updateCart = await cart.save();
+  return { data: updateCart, statusCode: 200 };
 };
