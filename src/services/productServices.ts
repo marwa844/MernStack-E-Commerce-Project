@@ -7,32 +7,36 @@ export const getAllProducts = async () => {
 
 // set Initial Products
 export const setInitialProducts = async () => {
-  const products = [
-    {
-      title: "product1",
-      description: "Desc About product 1",
-      image: "image1.png",
-      onsale: false,
-      price: 50,
-      sale: 0,
-      stock: 100,
-      categoryId: "68b8b3fa13b6be7c7e8e66d3",
-    },
-    {
-      title: "product2",
-      description: "Desc About product 2",
-      image: "image2.png",
-      onsale: true,
-      price: 50,
-      sale: 30,
-      stock: 80,
-      categoryId: "68b8b3fa13b6be7c7e8e66d2",
-    },
-  ];
+  try {
+    const products = [
+      {
+        title: "product1",
+        description: "Desc About product 1",
+        image: "image1.png",
+        onsale: false,
+        price: 50,
+        sale: 0,
+        stock: 100,
+        categoryId: "68b8b3fa13b6be7c7e8e66d3",
+      },
+      {
+        title: "product2",
+        description: "Desc About product 2",
+        image: "image2.png",
+        onsale: true,
+        price: 50,
+        sale: 30,
+        stock: 80,
+        categoryId: "68b8b3fa13b6be7c7e8e66d2",
+      },
+    ];
 
-  const exitProducts = await getAllProducts();
-  if (exitProducts.length == 0) {
-    await productModel.insertMany(products);
+    const exitProducts = await getAllProducts();
+    if (exitProducts.length == 0) {
+      await productModel.insertMany(products);
+    }
+  } catch {
+    console.log("somthing went wrong");
   }
 };
 

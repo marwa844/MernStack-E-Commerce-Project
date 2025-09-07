@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import express from "express";
 import mongoose from "mongoose";
 import { userRoute } from "./routes/userRoute.js";
@@ -7,12 +8,13 @@ import { categoryRouter } from "./routes/categoryRoute.js";
 import { productRoute } from "./routes/productRoute.js";
 import { cartRouter } from "./routes/cartRoute.js";
 
+dotenv.config();
 const app = express();
 const port = 3001;
 
 app.use(express.json());
 mongoose
-  .connect("mongodb://localhost:27017/ecommerce")
+  .connect(process.env.BASE_URL || "")
   .then(() => {
     console.log("DB Connected");
   })
@@ -33,7 +35,6 @@ app.use("/product", productRoute);
 
 // cart router
 app.use("/cart", cartRouter);
-
 
 app.listen(port, () => {
   console.log("Server is working");

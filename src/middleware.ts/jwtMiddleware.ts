@@ -24,8 +24,8 @@ export const jwtValidate = async (
 
   jwt.verify(
     tokenData,
-    "337AB1AEE961B38F4D8436B689A1D",
-    async (err:any, payload:any) => {
+    process.env.SECRET_TOKEN || "",
+    async (err: any, payload: any) => {
       if (err) {
         res.status(403).send("invalid token ");
         return;

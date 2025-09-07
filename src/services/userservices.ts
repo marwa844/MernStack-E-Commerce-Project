@@ -83,5 +83,5 @@ export const restPassword = async ({ email, newpassword }: ResetPassword) => {
 
 // Generate token
 const generateToken = (data: any) => {
-  return jwt.sign(data, "337AB1AEE961B38F4D8436B689A1D");
+  return jwt.sign(data, process.env.SECRET_TOKEN || "");
 };

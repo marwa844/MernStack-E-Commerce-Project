@@ -1,6 +1,7 @@
 import type { ObjectId } from "mongoose";
 import { cartModel } from "../models/cartModel.js";
 import { productModel } from "../models/productModel.js";
+import { orderModel, type IOrderItem } from "../models/orderModel.js";
 
 // create cart for user
 export interface ICreateCart {
@@ -175,4 +176,49 @@ export const claerCart = async ({ userId }: IClearCart) => {
   // save cart
   const updateCart = await cart.save();
   return { data: updateCart, statusCode: 200 };
+};
+
+// convert cart to order , checkout page
+interface ICreateorder {
+  userId: string;
+  address: string;
+}
+
+export const createOrder = async ({ userId, address }: ICreateorder) => {
+  // get cart for user
+  const cart = await getActiveCartForUser({ userId });
+
+  if (!address) {
+    return { data: " Address isn't exit", statusCode: 400 };
+  }
+
+  // declare array of oreritems list
+  const orderItemsList: IOrderItem[] = [];
+
+  //orderitem list
+  for (let item of cart.items) {
+    const product = await productModel.findById(item.product);
+    if (!product) {
+      return { data: " product isn't exit", statusCode: 400 };
+    }
+    orderItemsList.push({
+      title: product?.title,
+      image: product?.image,
+      quantity: item.quantity,
+      unitprice: item.unitprice,
+    });
+  }
+
+  //order other detail
+  const order = await orderModel.create({
+    items: orderItemsList,
+    totalAmount: cart.totalAmount,
+    userId: userId,
+    address: address,
+  });
+  // save order
+  // update cart status
+  cart.status = "completed";
+  await cart.save();
+  return { data: order, statusCode: 200 };
 };
