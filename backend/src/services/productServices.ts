@@ -12,7 +12,7 @@ export const setInitialProducts = async () => {
       {
         title: "product1",
         description: "Desc About product 1",
-        image: "image1.png",
+        image: "/uploads/img1.jpeg",
         onsale: false,
         price: 50,
         sale: 0,
@@ -22,7 +22,7 @@ export const setInitialProducts = async () => {
       {
         title: "product2",
         description: "Desc About product 2",
-        image: "image2.png",
+        image:  "/uploads/img2.jpeg",
         onsale: true,
         price: 50,
         sale: 30,

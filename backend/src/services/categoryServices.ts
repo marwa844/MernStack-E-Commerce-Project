@@ -11,11 +11,11 @@ export const setCategory = async () => {
     const categories = [
       {
         title: "category1",
-        image: "imageCat1.png",
+        image: "uploads/cat1.jpeg",
       },
       {
         title: "category2",
-        image: "imageCat2.png",
+        image: "uploads/cat2.jpeg",
       },
     ];
 
