@@ -12,7 +12,7 @@ userRoute.post("/register", async (req, res) => {
       phone,
       password,
     });
-    res.status(statusCode).send(data);
+    res.status(statusCode).json(data);
   } catch (err) {
     console.error("Register route error:", err);
     res.status(500).json({ message: "Internal Server Error" });
@@ -23,12 +23,12 @@ userRoute.post("/register", async (req, res) => {
 userRoute.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const { data, statusCode } = await login({ email, password });
-  res.status(statusCode).send(data);
+  res.status(statusCode).json(data);
 });
 
 // ResetPassword route
 userRoute.post("/reset", async (req, res) => {
   const { email, password } = req.body;
   const { data, statusCode } = await login({ email, password });
-  res.status(statusCode).send(data);
+  res.status(statusCode).json(data);
 });

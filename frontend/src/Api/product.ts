@@ -7,7 +7,7 @@ export const fetchProducts = async () => {
     if (!response.ok) {
       throw new Error(`${response.statusText}: ${response.status}`);
     }
-    const data = response.json();
+    const data = await response.json();
     console.log(data);
     return data;
   } catch (err) {

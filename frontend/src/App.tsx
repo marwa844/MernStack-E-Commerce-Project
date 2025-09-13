@@ -4,6 +4,7 @@ import Home from "./pages/home";
 import Shop from "./pages/shop";
 import Navbar from "./components/topBar";
 import ResponsiveAppBar from "./components/topBar";
+import Register from "./pages/register";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home></Home>}></Route>
           <Route path="/shop" element={<Shop></Shop>}></Route>
+          <Route path="/register" element={<Register></Register>}></Route>
         </Routes>
       </BrowserRouter>
     </>

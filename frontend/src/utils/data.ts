@@ -15,3 +15,10 @@ export interface ICategory {
   title: string;
   image: string;
 }
+
+export interface IRegister {
+  fullName: string;
+  email: string;
+  phone: string;
+  password: string;
+}
