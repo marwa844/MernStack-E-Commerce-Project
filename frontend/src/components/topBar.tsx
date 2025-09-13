@@ -1,9 +1,12 @@
+
+
 import {
   AppBar,
   Avatar,
   Box,
   Button,
   Container,
+  Grid,
   IconButton,
   Menu,
   MenuItem,
@@ -16,9 +19,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import { useState } from "react";
 import { useAuth } from "../context/Auth/AuthContext";
+import PersonIcon from '@mui/icons-material/Person';
+import { useNavigate } from "react-router-dom";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -39,9 +43,11 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const {email, userName, token}= useAuth();
- 
-  console.log(email, userName,token);
+  const { email , isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const loginHandle =()=>{
+    navigate("/login")
+  }
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -130,10 +136,19 @@ function ResponsiveAppBar() {
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
+            {isAuthenticated ?  
+            <>
+            <Tooltip title="Open settings" >
+              <Grid container justifyContent="center" alignItems="center">
+                <Grid >
+                  <Typography variant="h6">{email || ""}</Typography>
+                </Grid>
+                <Grid >
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt={email || ""} src="/static/images/avatar/2.jpg" />
+                  </IconButton>
+                </Grid>
+              </Grid>
             </Tooltip>
             <Menu
               sx={{ mt: "45px" }}
@@ -151,18 +166,24 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+             <MenuItem  onClick={handleCloseUserMenu}>
                   <Typography sx={{ textAlign: "center" }}>
-                    {setting}
+                    My Orders
                   </Typography>
                 </MenuItem>
-              ))}
+                <MenuItem  onClick={handleCloseUserMenu}>
+                  <Typography sx={{ textAlign: "center" }}>
+                    Logout
+                  </Typography>
+                </MenuItem>
             </Menu>
+            </>:<Button onClick={loginHandle} sx={{background:"transparent" , border:"none"}} > <PersonIcon sx={{ color: '#fff', mr: 1, my: 0.5 }}></PersonIcon> </Button>
+           }
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
+
   );
 }
 export default ResponsiveAppBar;

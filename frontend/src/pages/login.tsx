@@ -8,15 +8,13 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { AccountCircle } from '@mui/icons-material';
 import EmailIcon from '@mui/icons-material/Email';
-import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import { Alert, Button, Container, Typography } from '@mui/material';
-import { registerFetch } from '../Api/user';
+import { loginFetch } from '../Api/user';
 import { useAuth } from '../context/Auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-export default function Register() {
+export default function LoginApp() {
   const auth = useAuth();
   const navigate = useNavigate();
 
@@ -38,11 +36,9 @@ export default function Register() {
 
 
 
-  const fullNameRef = React.useRef<HTMLInputElement>(null);
 
   const emailRef = React.useRef<HTMLInputElement>(null);
 
-  const phoneRef = React.useRef<HTMLInputElement>(null);
 
   const passwordRef = React.useRef<HTMLInputElement>(null);
 
@@ -50,13 +46,11 @@ export default function Register() {
   const submit = async () => {
 
     try {
-      const fullName = fullNameRef.current?.value;
       const email = emailRef.current?.value;
-      const phone = phoneRef.current?.value;
       const password = passwordRef.current?.value;
 
 
-      if (!fullName || !email || !phone || !password) {
+      if (!email || !password) {
         SetError("Please fill all fields");
         SetSuccess("")
         return;
@@ -68,7 +62,7 @@ export default function Register() {
       }
 
       // fetch api register
-      const data = await registerFetch({ fullName, email, phone, password });
+      const data = await loginFetch({ email, password });
       if (!data) {
         SetError("No Token exit");
         SetSuccess("")
@@ -76,12 +70,10 @@ export default function Register() {
         return;
       }
       auth?.login( email, data);
-      SetSuccess("Successfully Registerd User");
+      SetSuccess("Successfully Login");
       SetError("");
-      if (fullNameRef.current && emailRef.current && phoneRef.current && passwordRef.current) {
-        fullNameRef.current.value = "";
+      if ( emailRef.current  && passwordRef.current) {
         emailRef.current.value = "";
-        phoneRef.current.value = "";
         passwordRef.current.value = "";
       }
       navigate("/");
@@ -101,26 +93,17 @@ export default function Register() {
   return (
     <Container sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "90vh" }} >
       <Box sx={{ display: 'flex', flexDirection: "column", flexWrap: 'wrap', alignItems: "center", justifyContent: "center", mt: 2, gap: 3, border: 1, color: "#bebebe", borderRadius: 2, width: "300px", margin: "20px auto", padding: 2 }}>
-        <Typography variant='h3'>Register</Typography>
+        <Typography variant='h3'>Login</Typography>
         <div>
           {error && <Alert severity="error">{error} </Alert>}
           {success && <Alert severity="success">{success} </Alert>
           }
         </div>
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-          <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-          <TextField required id="fullName" label="Full Name" variant="standard" name='fullName' inputRef={fullNameRef} />
-        </Box>
+      
         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
           <EmailIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
 
           <TextField required id="email" label="Email" type='email' variant="standard" name='email' inputRef={emailRef} />
-        </Box>
-
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-          <PhoneInTalkIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-
-          <TextField required id="phone" label="Phone" variant="standard" name='phone' inputRef={phoneRef} />
         </Box>
 
         <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
