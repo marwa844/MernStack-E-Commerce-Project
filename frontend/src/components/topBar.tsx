@@ -15,6 +15,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import MenuIcon from "@mui/icons-material/Menu";
 
 import { useState } from "react";
+import { useAuth } from "../context/Auth/AuthContext";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -38,6 +39,9 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const {email, userName, token}= useAuth();
+ 
+  console.log(email, userName,token);
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
