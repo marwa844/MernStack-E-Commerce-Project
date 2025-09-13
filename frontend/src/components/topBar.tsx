@@ -43,11 +43,17 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const { email , isAuthenticated } = useAuth();
+  const { email , isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const loginHandle =()=>{
     navigate("/login")
   }
+
+const logoutHandle =()=>{
+  logout();
+  handleCloseNavMenu();
+  navigate("/");
+}
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -171,8 +177,8 @@ function ResponsiveAppBar() {
                     My Orders
                   </Typography>
                 </MenuItem>
-                <MenuItem  onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
+                <MenuItem  onClick={logoutHandle}>
+                  <Typography sx={{ textAlign: "center" }} >
                     Logout
                   </Typography>
                 </MenuItem>

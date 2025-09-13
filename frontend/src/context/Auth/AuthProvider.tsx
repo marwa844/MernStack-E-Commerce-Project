@@ -15,9 +15,15 @@ const BASE_lOCAL_TOKEN ='token';
         localStorage.setItem(BASE_lOCAL_EMAIL, email || "");
         localStorage.setItem(BASE_lOCAL_TOKEN, token || "");
     }
+    const logout =()=>{
+          localStorage.removeItem(BASE_lOCAL_EMAIL);
+        localStorage.removeItem(BASE_lOCAL_TOKEN);
+        setEmail(null);
+        setToken(null);
+    }
 
     return (
-        <AuthContext.Provider value={{ email, token, login, isAuthenticated: !!token }}>
+        <AuthContext.Provider value={{ email, token, isAuthenticated: !!token , login , logout }}>
         {children}
 </AuthContext.Provider>
     )
