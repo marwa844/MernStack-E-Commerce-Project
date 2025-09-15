@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
+import { useCart } from "../context/Cart/cartContext";
 
 interface Props {
   _id: string;
@@ -26,6 +27,7 @@ export default function ProductCard({
   sale,
   stock,
 }: Props) {
+  const {addToCart}= useCart();
   const img_url = "http://localhost:3001";
   return (
     <Card sx={{ maxWidth: 345 }} key={_id}>
@@ -49,7 +51,7 @@ export default function ProductCard({
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
+        <Button size="small" color="primary" onClick={()=>addToCart(_id)}>
           Add To Cart
         </Button>
       </CardActions>

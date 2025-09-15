@@ -28,3 +28,15 @@ export interface ILogin {
   email: string;
   password: string;
 }
+
+
+export interface ICart {
+  _id: string;
+  title: string;
+  image: string;
+  onsale: boolean;
+  price: number;
+  sale: number;
+  stock: number;
+  quantity:number;
+}

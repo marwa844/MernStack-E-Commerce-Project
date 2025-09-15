@@ -3,6 +3,7 @@
 import {
   AppBar,
   Avatar,
+  Badge,
   Box,
   Button,
   Container,
@@ -21,6 +22,7 @@ import { useState } from "react";
 import { useAuth } from "../context/Auth/AuthContext";
 import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from "react-router-dom";
+import { ShoppingCart } from "@mui/icons-material";
 
 const pages = ["Products", "Pricing", "Blog"];
 
@@ -43,17 +45,21 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const { email , isAuthenticated, logout } = useAuth();
+  const { email, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
-  const loginHandle =()=>{
+  const loginHandle = () => {
     navigate("/login")
   }
 
-const logoutHandle =()=>{
-  logout();
-  handleCloseNavMenu();
-  navigate("/");
-}
+  const logoutHandle = () => {
+    logout();
+    handleCloseNavMenu();
+    navigate("/");
+  }
+  
+  const cartHandle =()=>{
+    navigate("/cart")
+  }
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -141,50 +147,55 @@ const logoutHandle =()=>{
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            {isAuthenticated ?  
-            <>
-            <Tooltip title="Open settings" >
-              <Grid container justifyContent="center" alignItems="center">
-                <Grid >
-                  <Typography variant="h6">{email || ""}</Typography>
-                </Grid>
-                <Grid >
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt={email || ""} src="/static/images/avatar/2.jpg" />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-             <MenuItem  onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
-                    My Orders
-                  </Typography>
-                </MenuItem>
-                <MenuItem  onClick={logoutHandle}>
-                  <Typography sx={{ textAlign: "center" }} >
-                    Logout
-                  </Typography>
-                </MenuItem>
-            </Menu>
-            </>:<Button onClick={loginHandle} sx={{background:"transparent" , border:"none"}} > <PersonIcon sx={{ color: '#fff', mr: 1, my: 0.5 }}></PersonIcon> </Button>
-           }
+          <Box  sx={{display:"flex" , justifyContent:"center", alignItems:"center", flexGrow: 0 }}>
+            <IconButton aria-label="cart" onClick={cartHandle}>
+              <Badge badgeContent={4} color="secondary">
+                <ShoppingCart  sx={{color:"#fff"}}/>
+              </Badge>
+            </IconButton>
+            {isAuthenticated ?
+              <>
+                <Tooltip title="Open settings" >
+                  <Grid container justifyContent="center" alignItems="center">
+                    <Grid >
+                      <Typography variant="h6">{email || ""}</Typography>
+                    </Grid>
+                    <Grid >
+                      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                        <Avatar alt={email || ""} src="/static/images/avatar/2.jpg" />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography sx={{ textAlign: "center" }}>
+                      My Orders
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem onClick={logoutHandle}>
+                    <Typography sx={{ textAlign: "center" }} >
+                      Logout
+                    </Typography>
+                  </MenuItem>
+                </Menu>
+              </> : <Button onClick={loginHandle} sx={{ background: "transparent", border: "none" }} > <PersonIcon sx={{ color: '#fff', mr: 1, my: 0.5 }}></PersonIcon> </Button>
+            }
           </Box>
         </Toolbar>
       </Container>
