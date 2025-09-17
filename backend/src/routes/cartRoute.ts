@@ -17,7 +17,7 @@ cartRouter.get("/", jwtValidate, async (req: any, res) => {
     // get cart for user
     const userId = req.user._id;
 
-    const cart = await getActiveCartForUser({ userId });
+    const cart = await getActiveCartForUser({ userId , populateAllowed:true});
     res.status(200).send(cart);
   } catch (err) {
     res.status(500).send("somthing went wrong");
@@ -35,7 +35,7 @@ cartRouter.post("/items", jwtValidate, async (req: any, res) => {
       quantity,
     });
 
-    res.status(response.statusCode).send(response.data);
+    res.status(response.statusCode).json(response.data);
   } catch (err) {
     res.status(500).send("somthing went wrong");
   }

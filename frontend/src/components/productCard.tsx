@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import { useCart } from "../context/Cart/cartContext";
+import { useAuth } from "../context/Auth/AuthContext";
 
 interface Props {
   _id: string;
@@ -27,6 +28,7 @@ export default function ProductCard({
   sale,
   stock,
 }: Props) {
+  const{token}= useAuth();
   const {addToCart}= useCart();
   const img_url = "http://localhost:3001";
   return (

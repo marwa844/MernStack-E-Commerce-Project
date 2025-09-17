@@ -17,10 +17,18 @@ const createCartForUSer = async ({ userId }: ICreateCart) => {
 // get active cart for user
 export interface IGetActiveCart {
   userId: string;
+  populateAllowed?:boolean;
 }
 
-export const getActiveCartForUser = async ({ userId }: IGetActiveCart) => {
-  let getCart = await cartModel.findOne({ userId, status: "active" });
+export const getActiveCartForUser = async ({ userId , populateAllowed}: IGetActiveCart) => {
+  let getCart;
+  if(populateAllowed){
+   getCart = await cartModel.findOne({ userId, status: "active" }).populate("items.product");
+
+  }else{
+       getCart = await cartModel.findOne({ userId, status: "active" });
+
+  }
   if (!getCart) {
     getCart = await createCartForUSer({ userId });
   }
@@ -48,6 +56,9 @@ export const addItemToCart = async ({
     return { data: " Item is already exit", statusCode: 400 };
   }
 
+  console.log("ProductId from front-end:", productId);
+console.log("Type of ProductId:", typeof productId);
+
   // check about item in db
   const product = await productModel.findById(productId);
   if (!product) {
@@ -66,8 +77,9 @@ export const addItemToCart = async ({
   });
   // update to cart
   cart.totalAmount += product.price * parseInt(quantity);
-  const updateCart = await cart.save();
-  return { data: updateCart, statusCode: 201 };
+  // const updateCart = await cart.save();
+  await cart.save();
+  return { data: await getActiveCartForUser({userId, populateAllowed:true}), statusCode: 201 };
 };
 
 // update items in carr
@@ -118,8 +130,8 @@ export const updateItemInCart = async ({
   // get total exit product
   const totalExitProduct = product.price * parseInt(quantity);
   cart.totalAmount = totalOtherItems + totalExitProduct;
-  const updateCart = await cart.save();
-  return { data: updateCart, statusCode: 200 };
+  await cart.save();
+  return { data:  await getActiveCartForUser({userId, populateAllowed:true}), statusCode: 200 };
 };
 
 // Delete Item in cart
@@ -152,8 +164,8 @@ export const deleteItemInCart = async ({ userId, productId }: IDeleteItem) => {
   cart.totalAmount = tAmount;
 
   // save cart
-  const updateCart = await cart.save();
-  return { data: updateCart, statusCode: 200 };
+ await cart.save();
+  return { data:  await getActiveCartForUser({userId, populateAllowed:true}), statusCode: 200 };
 };
 
 // Delete All Items in cart
@@ -174,8 +186,8 @@ export const claerCart = async ({ userId }: IClearCart) => {
   cart.totalAmount = tAmount;
 
   // save cart
-  const updateCart = await cart.save();
-  return { data: updateCart, statusCode: 200 };
+await cart.save();
+  return { data:  await getActiveCartForUser({userId, populateAllowed:true}), statusCode: 200 };
 };
 
 // convert cart to order , checkout page
