@@ -12,6 +12,14 @@ export interface IOrder extends Document {
   totalAmount: number;
   userId: ObjectId | string;
   address: string;
+  address2?: string;
+  orderNo: number;
+  country: ObjectId | string;
+  city:string
+  fullName: string;
+  phone :string;
+
+
 }
 
 const orderItemSchema = new Schema<IOrderItem>({
@@ -26,6 +34,19 @@ const orderSchema = new Schema<IOrder>({
   totalAmount: { type: Number, required: true },
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   address: { type: String, required: true },
+  address2: { type: String },
+  orderNo: { type: Number, required: true, unique:true },
+  country: { type: Schema.Types.ObjectId, ref: "Country", required: true },
+  fullName: { type: String,  required: true },
+  phone: { type: String},
+  city: {type: String}
+
+
 });
 
 export const orderModel = mongoose.model<IOrder>("Order", orderSchema);
+
+
+
+
+// Get Order 

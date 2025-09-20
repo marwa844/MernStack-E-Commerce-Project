@@ -40,7 +40,7 @@ export default function ProductCard({
           image={`${img_url}${image}`}
           alt="green iguana"
         />
-        <CardContent>
+        <CardContent >
           <Typography gutterBottom variant="h5" component="div">
             {title}
             {stock}
@@ -53,7 +53,7 @@ export default function ProductCard({
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary" onClick={()=>addToCart(_id)}>
+        <Button size="small" color="primary" onClick={()=>addToCart(_id, 1)}>
           Add To Cart
         </Button>
       </CardActions>

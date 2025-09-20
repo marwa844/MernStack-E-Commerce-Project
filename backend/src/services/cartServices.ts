@@ -2,6 +2,7 @@ import type { ObjectId } from "mongoose";
 import { cartModel } from "../models/cartModel.js";
 import { productModel } from "../models/productModel.js";
 import { orderModel, type IOrderItem } from "../models/orderModel.js";
+import { countryModel } from "../models/CountryModel.js";
 
 // create cart for user
 export interface ICreateCart {
@@ -49,6 +50,9 @@ export const addItemToCart = async ({
 }: IAddItemToCart) => {
   // get cart for user
   const cart = await getActiveCartForUser({ userId });
+
+  console.log("Sending to backend:", { productId, quantity ,userId});
+
 
   // check item is exit in db
   const item = cart.items.find((p) => p.product.toString() === productId);
@@ -190,19 +194,42 @@ await cart.save();
   return { data:  await getActiveCartForUser({userId, populateAllowed:true}), statusCode: 200 };
 };
 
+
+
 // convert cart to order , checkout page
 interface ICreateorder {
   userId: string;
   address: string;
+  address2?: string;
+  countryId : string;
+   fullName : string;
+    city : string;
+     phone : string;
 }
 
-export const createOrder = async ({ userId, address }: ICreateorder) => {
+export const createOrder = async ({ userId, address, address2, countryId, fullName , city, phone }: ICreateorder) => {
   // get cart for user
   const cart = await getActiveCartForUser({ userId });
+
+  
+  if (!cart || cart.items.length === 0) {
+    return { data: "Cart is empty", statusCode: 400 };
+  }
 
   if (!address) {
     return { data: " Address isn't exit", statusCode: 400 };
   }
+
+  const selectedCountry = await countryModel.findById(countryId);
+if (!selectedCountry || !selectedCountry.enabled) {
+  return { data: "Selected country is not valid", statusCode: 400 };
+}
+
+  // get last order Number
+const lastOrder = await orderModel.findOne().sort({ orderNo: -1 });
+const lastOrderNo = lastOrder ? lastOrder.orderNo : 0;
+
+
 
   // declare array of oreritems list
   const orderItemsList: IOrderItem[] = [];
@@ -227,6 +254,14 @@ export const createOrder = async ({ userId, address }: ICreateorder) => {
     totalAmount: cart.totalAmount,
     userId: userId,
     address: address,
+    address2: address2,
+    orderNo : lastOrderNo + 1,
+    country : countryId,
+    fullName : fullName ,
+     city : city,
+      phone : phone 
+
+
   });
   // save order
   // update cart status
@@ -234,3 +269,4 @@ export const createOrder = async ({ userId, address }: ICreateorder) => {
   await cart.save();
   return { data: order, statusCode: 200 };
 };
+

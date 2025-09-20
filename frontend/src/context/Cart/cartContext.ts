@@ -4,7 +4,13 @@ import type { ICart } from "../../utils/data";
 export interface CartContextType {
  cartItems :ICart[];
  totalAmount: number;
- addToCart : (_id:string)=> void;
+ addToCart : (_id:string, quantity: number)=> void;
+ updateItemQtyCart: (_id:string, quantity: number) => void;
+  deleteItemInCart: (_id:string) => void;
+  emptyCart: ()=> void;
+  orderNo: number;
+  orderId : string;
+  setOrderRef: ({orderNo , orderId}: { orderNo: number; orderId: string })=> void;
 }
 
 export const CartContext = createContext<CartContextType | null>(null);

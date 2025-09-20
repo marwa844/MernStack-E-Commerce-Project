@@ -9,6 +9,10 @@ import LoginApp from "./pages/login";
 import Cart from "./pages/cart";
 import ProtectedRoute from "./components/protectedRoute";
 import CartProvider from "./context/Cart/cartProvider";
+import Checkout from "./pages/checkout";
+import Thankyou from "./pages/thankyou";
+import Order from "./pages/order";
+
 
 function App() {
   return (
@@ -24,6 +28,10 @@ function App() {
             <Route path="/login" element={<LoginApp></LoginApp>}></Route>
             <Route element={<ProtectedRoute></ProtectedRoute>}>
               <Route path="/cart" element={<Cart></Cart>}></Route>
+              <Route path="/checkout" element={<Checkout></Checkout>}></Route>
+              <Route path="/thankyou" element={<Thankyou></Thankyou>}></Route>
+              <Route path="/order" element={<Order></Order>}></Route>
+
             </Route>
           </Routes>
         </BrowserRouter>

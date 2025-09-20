@@ -1,5 +1,3 @@
-
-
 import {
   AppBar,
   Avatar,
@@ -23,10 +21,12 @@ import { useAuth } from "../context/Auth/AuthContext";
 import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
+import { useCart } from "../context/Cart/cartContext";
 
 const pages = ["Products", "Pricing", "Blog"];
 
 function ResponsiveAppBar() {
+  const{cartItems}= useCart();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -64,7 +64,9 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          <Button variant="text" onClick={()=> navigate("/")} sx={{color:"#fff"}}>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+         
           <Typography
             variant="h6"
             noWrap
@@ -82,7 +84,7 @@ function ResponsiveAppBar() {
           >
             LOGO
           </Typography>
-
+       </Button>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -149,7 +151,7 @@ function ResponsiveAppBar() {
           </Box>
           <Box  sx={{display:"flex" , justifyContent:"center", alignItems:"center", flexGrow: 0 }}>
             <IconButton aria-label="cart" onClick={cartHandle}>
-              <Badge badgeContent={4} color="secondary">
+              <Badge badgeContent={cartItems.length} color="secondary">
                 <ShoppingCart  sx={{color:"#fff"}}/>
               </Badge>
             </IconButton>

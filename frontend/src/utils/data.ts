@@ -31,7 +31,7 @@ export interface ILogin {
 
 
 export interface ICart {
-  _id: string;
+  productId: string;
   title: string;
   image: string;
   onsale: boolean;
@@ -39,4 +39,24 @@ export interface ICart {
   sale: number;
   stock: number;
   quantity:number;
+  unitprice:number
 }
+
+export interface ICountry {
+    _id: string;
+    name: string;
+    code: string;
+    enabled: boolean;
+    
+}
+
+export interface ICheckout {
+  address: string;
+  address2?: string;
+  countryId : string;
+   fullName : string;
+    city : string;
+     phone : string;
+    
+}
+

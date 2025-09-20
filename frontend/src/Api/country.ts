@@ -1,7 +1,7 @@
-const BASE_URL = "http://localhost:3001/categoy";
+const BASE_URL = "http://localhost:3001/country";
 
 // API Get Products
-export const fetchCategory = async () => {
+export const fetchCountry = async () => {
   try {
     const response = await fetch(BASE_URL);
     if (!response.ok) {

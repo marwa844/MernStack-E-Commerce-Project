@@ -37,13 +37,14 @@ cartRouter.post("/items", jwtValidate, async (req: any, res) => {
 
     res.status(response.statusCode).json(response.data);
   } catch (err) {
-    res.status(500).send("somthing went wrong");
+    res.status(500).json("somthing went wrong");
   }
 });
 
 // update product ITem in cart
 cartRouter.put("/items", jwtValidate, async (req: any, res) => {
-  const user_id = req.user?._id;
+  try{
+const user_id = req.user?._id;
   const { userId, productId, quantity } = req.body;
 
   const response = await updateItemInCart({
@@ -51,7 +52,11 @@ cartRouter.put("/items", jwtValidate, async (req: any, res) => {
     productId,
     quantity,
   });
-  res.status(response.statusCode).send(response.data);
+  res.status(response.statusCode).json(response.data);
+  }catch(err) {
+    res.status(500).json("somthing went wrong");
+  }
+  
 });
 
 // delete item in cart
@@ -66,9 +71,9 @@ cartRouter.delete("/items/:productId", jwtValidate, async (req: any, res) => {
       productId,
     });
 
-    res.status(response.statusCode).send(response.data);
+    res.status(response.statusCode).json(response.data);
   } catch (err) {
-    res.status(500).send("somthing went wrong");
+    res.status(500).json("somthing went wrong");
   }
 });
 
@@ -79,9 +84,9 @@ cartRouter.delete("/", jwtValidate, async (req: any, res) => {
 
     const response = await claerCart({ userId: user_id });
 
-    res.status(response.statusCode).send(response.data);
+    res.status(response.statusCode).json(response.data);
   } catch (err) {
-    res.status(500).send("somthing went wrong");
+    res.status(500).json("somthing went wrong");
   }
 });
 
@@ -89,10 +94,10 @@ cartRouter.delete("/", jwtValidate, async (req: any, res) => {
 cartRouter.post("/checkout", jwtValidate, async (req: any, res) => {
   try {
     const user_id = req.user?._id;
-    const { address } = req.body;
-    const response = await createOrder({ userId: user_id, address });
-    res.status(response.statusCode).send(response.data);
+    const { address, address2 , countryId, fullName , phone , city} = req.body;
+    const response = await createOrder({ userId: user_id, address , address2, countryId, fullName, phone, city});
+    res.status(response.statusCode).json(response.data);
   } catch (err) {
-    res.status(500).send("somthing went wrong");
+    res.status(500).json("somthing went wrong");
   }
 });
