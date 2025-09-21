@@ -56,6 +56,9 @@ export interface IProduct {
 }
 
 export const getSpecificProduct = async ({ productId }: IProduct) => {
-  const product = await productModel.findById(productId);
+  const product = await productModel
+    .findById(productId)
+    .populate("categoryId", "title") // هيجيبلك بس الـ title من الكاتيجوري
+    .lean(); // optional لو عايزة ترجع object عادي بدل Document
   return product;
 };

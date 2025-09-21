@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
 import { useCart } from "../context/Cart/cartContext";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = ["home","shop", "cart", "contact"];
 
 function ResponsiveAppBar() {
   const{cartItems}= useCart();
@@ -64,14 +64,17 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Button variant="text" onClick={()=> navigate("/")} sx={{color:"#fff"}}>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-         
-          <Typography
+    
+<Box
+  component="img"
+  src="logo.png"
+  alt="Logo"
+  sx={{ width: "40px", mr: 2, display: { xs: "none", md: "flex" } }}
+/>          <Typography
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -82,10 +85,11 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            LOGO
+            MyStore
           </Typography>
-       </Button>
+
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -113,13 +117,24 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={()=>{
+                  {
+                      handleCloseNavMenu();
+                      navigate(page === "home" ? "/" : `/${page}`);
+                  }
+                }}>
                   <Typography sx={{ textAlign: "center" }}>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+
+          <Box
+  component="img"
+  src="logo.png"
+  alt="Logo"
+  sx={{ width: "40px", mr: 2, display: { xs: "flex", md: "none" } }}
+/>
           <Typography
             variant="h5"
             noWrap
@@ -136,19 +151,24 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            LOGO
+            MyStore
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={()=> {
+                  handleCloseNavMenu
+                  navigate(page === "home" ? "/" : `/${page}`);
+                }}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
               </Button>
             ))}
           </Box>
+
           <Box  sx={{display:"flex" , justifyContent:"center", alignItems:"center", flexGrow: 0 }}>
             <IconButton aria-label="cart" onClick={cartHandle}>
               <Badge badgeContent={cartItems.length} color="secondary">
@@ -199,6 +219,7 @@ function ResponsiveAppBar() {
               </> : <Button onClick={loginHandle} sx={{ background: "transparent", border: "none" }} > <PersonIcon sx={{ color: '#fff', mr: 1, my: 0.5 }}></PersonIcon> </Button>
             }
           </Box>
+
         </Toolbar>
       </Container>
     </AppBar>

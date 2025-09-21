@@ -3,6 +3,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
+import { useNavigate } from "react-router-dom";
+import { Container } from "@mui/material";
 
 interface Props {
   _id: string;
@@ -13,8 +15,15 @@ interface Props {
 export default function CategoryCard({ _id, title, image }: Props) {
   const img_url = "http://localhost:3001";
 
+  const navigate = useNavigate();
+    const handleClick = () => {
+    navigate(`/category/${_id}`);
+   
+  };
+
   return (
-    <Card sx={{ maxWidth: 345 }} key={_id}>
+    <Container sx={{mt:5}}>
+    <Card sx={{ maxWidth: 345 }} key={_id}  onClick={handleClick} >
       <CardActionArea>
         <CardMedia
           component="img"
@@ -29,5 +38,7 @@ export default function CategoryCard({ _id, title, image }: Props) {
         </CardContent>
       </CardActionArea>
     </Card>
+
+    </Container>
   );
 }

@@ -1,19 +1,18 @@
-import dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
 import mongoose from "mongoose";
-import { userRoute } from "./routes/userRoute.js";
-import { setCategory } from "./services/categoryServices.js";
-import { setInitialProducts } from "./services/productServices.js";
-import { categoryRouter } from "./routes/categoryRoute.js";
+import dotenv from "dotenv";
 import path from "path";
+
 import { fileURLToPath } from "url";
+import { setInitialProducts } from "./services/productServices.js";
+import { setInitialCountry } from "./services/countryServices.js";
+import { userRoute } from "./routes/userRoute.js";
+import { categoryRouter } from "./routes/categoryRoute.js";
 import { productRoute } from "./routes/productRoute.js";
 import { cartRouter } from "./routes/cartRoute.js";
-import cors from "cors";
 import { countryRoute } from "./routes/countryRoute.js";
-import { setInitialCountry } from "./services/countryServices.js";
-import { orderModel } from "./models/orderModel.js";
-import { orderRouter } from "./routes/orderRoute.js";
+import { setCategory } from "./services/categoryServices.js";
 
 dotenv.config();
 const app = express();
@@ -55,3 +54,4 @@ app.use("/country", countryRoute);
 app.listen(port, () => {
   console.log("Server is working");
 });
+

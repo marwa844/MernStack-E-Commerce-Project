@@ -7,6 +7,7 @@ import ProductCard from "../components/productCard";
 
 export function Shop() {
   const [products, setProducts] = useState<IProduct[]>([]);
+  
 
   useEffect(() => {
     fetchProducts()

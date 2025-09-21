@@ -74,7 +74,6 @@ export default function Cart() {
                         <TableCell align="right">{row.onsale ? (
                                 <>
                                 <del>{row.price}</del> {row.sale}
-                                {console.log(row.sale ?? 0)}
                                 </>
                             ) : row.price}
                         </TableCell>

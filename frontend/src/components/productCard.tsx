@@ -7,6 +7,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import { useCart } from "../context/Cart/cartContext";
 import { useAuth } from "../context/Auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   _id: string;
@@ -31,16 +32,23 @@ export default function ProductCard({
   const{token}= useAuth();
   const {addToCart}= useCart();
   const img_url = "http://localhost:3001";
+
+  const navigate = useNavigate();
+    const productHandle = () => {
+    navigate(`/product/${_id}`);
+   
+  };
+
   return (
     <Card sx={{ maxWidth: 345 }} key={_id}>
-      <CardActionArea>
+      <CardActionArea onClick={productHandle} >
         <CardMedia
           component="img"
           height="140"
           image={`${img_url}${image}`}
           alt="green iguana"
         />
-        <CardContent >
+        <CardContent key={_id} onClick={productHandle}  >
           <Typography gutterBottom variant="h5" component="div">
             {title}
             {stock}

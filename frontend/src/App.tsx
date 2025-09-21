@@ -12,6 +12,8 @@ import CartProvider from "./context/Cart/cartProvider";
 import Checkout from "./pages/checkout";
 import Thankyou from "./pages/thankyou";
 import Order from "./pages/order";
+import ProductsCategory from "./pages/ProductsCategory";
+import Product from "./pages/product";
 
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home></Home>}></Route>
             <Route path="/shop" element={<Shop></Shop>}></Route>
+             <Route path="/category/:id" element={<ProductsCategory></ProductsCategory>}></Route>
+             <Route path="/product/:id" element={<Product></Product>}></Route>
             <Route path="/register" element={<Register></Register>}></Route>
             <Route path="/login" element={<LoginApp></LoginApp>}></Route>
             <Route element={<ProtectedRoute></ProtectedRoute>}>

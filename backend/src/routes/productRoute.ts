@@ -15,11 +15,11 @@ productRoute.get("/", async (req, res) => {
 productRoute.get("/product-category/:id", async (req, res) => {
   const categoryId = req.params.id;
   const products = await getCategoryProducts({ categoryId });
-  res.status(200).send(products);
+  res.status(200).json(products);
 });
 
 productRoute.get("/:id", async (req, res) => {
   const productId = req.params.id;
   const product = await getSpecificProduct({ productId });
-  res.status(200).send(product);
+  res.status(200).json(product);
 });

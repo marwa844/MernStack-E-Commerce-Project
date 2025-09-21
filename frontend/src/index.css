@@ -1,0 +1,11 @@
+.css-ptdwpq-MuiPaper-root-MuiAppBar-root {
+--AppBar-background: #824a8b!important;
+}
+
+@media (max-width:1200) {
+    
+
+.sm-none{
+    display: none;
+}
+}

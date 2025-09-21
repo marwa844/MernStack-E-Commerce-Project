@@ -36,7 +36,7 @@ export const getActiveCartForUser = async ({ userId , populateAllowed}: IGetActi
   return getCart;
 };
 
-//add Item to cart
+// add Item to cart
 export interface IAddItemToCart {
   userId: string;
   productId: any;
@@ -48,43 +48,58 @@ export const addItemToCart = async ({
   quantity,
   userId,
 }: IAddItemToCart) => {
-  // get cart for user
-  const cart = await getActiveCartForUser({ userId });
-
-  console.log("Sending to backend:", { productId, quantity ,userId});
-
-
-  // check item is exit in db
-  const item = cart.items.find((p) => p.product.toString() === productId);
-  if (item) {
-    return { data: " Item is already exit", statusCode: 400 };
+  const qty = typeof quantity === "string" ? parseInt(quantity) : quantity;
+  if (isNaN(qty) || qty <= 0) {
+    return { data: "Invalid quantity", statusCode: 400 };
   }
 
-  console.log("ProductId from front-end:", productId);
-console.log("Type of ProductId:", typeof productId);
+  // الحصول على الكارت النشط
+  const cart = await getActiveCartForUser({ userId });
+  if (!cart) {
+    return { data: "Cart not found", statusCode: 404 };
+  }
 
-  // check about item in db
+  // التحقق من وجود المنتج في قاعدة البيانات
   const product = await productModel.findById(productId);
   if (!product) {
-    return { data: " Product isn't exit", statusCode: 400 };
+    return { data: "Product doesn't exist", statusCode: 400 };
   }
 
-  if (product.stock < parseInt(quantity)) {
-    return { data: "low stock", statusCode: 400 };
-  }
+  // التحقق إذا كان المنتج موجود في السلة بالفعل
+  const item = cart.items.find((p) => p.product._id === productId);
 
-  // add item to cart
-  cart.items.push({
-    product: productId,
-    unitprice: product.onsale ? product.sale : product.price,
-    quantity: parseInt(quantity),
-  });
-  // update to cart
-  cart.totalAmount += product.price * parseInt(quantity);
-  // const updateCart = await cart.save();
+  if (item) {
+    updateItemInCart({userId, productId, quantity});
+    return;
+   
+  }
+    // إضافة منتج جديد للسلة
+    if (qty > product.stock) {
+      return { data: "Not enough stock", statusCode: 400 };
+    }
+    cart.items.push({
+      product: productId,
+      unitprice: product.onsale ? product.sale : product.price,
+      quantity: qty,
+    });
+  
+
+  // إعادة حساب totalAmount وحفظ الكارت
+  cart.totalAmount = cart.items.reduce(
+    (acc, curr) => acc + curr.unitprice * curr.quantity,
+    0
+  );
   await cart.save();
-  return { data: await getActiveCartForUser({userId, populateAllowed:true}), statusCode: 201 };
+
+  return {
+    data: await getActiveCartForUser({ userId, populateAllowed: true }),
+    statusCode: 201,
+  };
 };
+
+
+
+
 
 // update items in carr
 
