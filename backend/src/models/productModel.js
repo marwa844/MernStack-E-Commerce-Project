@@ -7,7 +7,7 @@ const productSchema = new Schema({
     price: { type: Number, required: true },
     sale: { type: Number, default: 0 },
     stock: { type: Number, default: 0 },
-    categoryId: { type: Schema.Types.ObjectId, ref: "User" },
+    categoryId: { type: Schema.Types.ObjectId, ref: "Category" },
 });
 export const productModel = mongoose.model("Product", productSchema);
 //# sourceMappingURL=productModel.js.map

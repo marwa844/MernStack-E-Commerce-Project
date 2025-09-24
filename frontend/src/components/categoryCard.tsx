@@ -23,15 +23,15 @@ export default function CategoryCard({ _id, title, image }: Props) {
 
   return (
     <Container sx={{mt:5}}>
-    <Card sx={{ maxWidth: 345 }} key={_id}  onClick={handleClick} >
+    <Card sx={{ maxWidth: "100%" }} key={_id}  onClick={handleClick} >
       <CardActionArea>
         <CardMedia
           component="img"
-          height="140"
+          height="300"
           image={`${img_url}${image}`}
           alt="green iguana"
         />
-        <CardContent>
+        <CardContent className="cat-title">
           <Typography gutterBottom variant="h5" component="div">
             {title}
           </Typography>

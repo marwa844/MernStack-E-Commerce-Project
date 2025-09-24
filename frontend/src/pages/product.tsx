@@ -11,7 +11,7 @@ import React from "react";
 export default function Product() {
         const{token}= useAuth();
 
-        const { addToCart , updateItemQtyCart,} = useCart();
+        const { addToCart , updateItemQtyCart} = useCart();
         const navigate = useNavigate();
   const { id } = useParams(); // productId
   const [product, setProduct] = useState<IProduct | null>(null);
@@ -30,6 +30,7 @@ const [quantity, setQuantity] = useState<number>(1)
         .catch((err) => console.log(err));
     }
   }, [id]);
+  
 
   if (!product) return <p>Loading...</p>;
    const handleQtyCart =(productId:string, quantity:number)=>{

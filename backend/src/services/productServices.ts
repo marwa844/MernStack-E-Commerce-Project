@@ -5,6 +5,7 @@ export const getAllProducts = async () => {
   return await productModel.find();
 };
 
+
 // set Initial Products
 export const setInitialProducts = async () => {
   try {
@@ -45,10 +46,13 @@ interface ICategoryProduct {
   categoryId: string;
 }
 
+
+// get products by category
 export const getCategoryProducts = async ({ categoryId }: ICategoryProduct) => {
-  const products = await productModel.find({ categoryId });
+  const products = await productModel.find({ categoryId }).populate("categoryId");
   return products;
 };
+
 
 // get specific products by product Id
 export interface IProduct {
@@ -58,7 +62,13 @@ export interface IProduct {
 export const getSpecificProduct = async ({ productId }: IProduct) => {
   const product = await productModel
     .findById(productId)
-    .populate("categoryId", "title") // هيجيبلك بس الـ title من الكاتيجوري
-    .lean(); // optional لو عايزة ترجع object عادي بدل Document
+    .populate("categoryId", "title") 
+  
   return product;
+};
+
+
+// get onsale products
+export const getonsaleProducts = async () => {
+  return await productModel.find({onsale:true});
 };

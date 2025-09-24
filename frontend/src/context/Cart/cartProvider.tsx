@@ -12,6 +12,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   const [orderNo, setOrderNo] = useState<number>(0);
   const [orderId, setOrderId] = useState<string>("");
 
+
   // Load cart on mount
   useEffect(() => {
     if (!token) return;
@@ -158,6 +159,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     setOrderId(orderId);
     setOrderNo(orderNo);
   };
+
 
   return (
     <CartContext.Provider

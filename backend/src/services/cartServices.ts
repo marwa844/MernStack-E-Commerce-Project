@@ -1,5 +1,5 @@
 import type { ObjectId } from "mongoose";
-import { cartModel } from "../models/cartModel.js";
+import { cartModel, type ICart } from "../models/cartModel.js";
 import { productModel } from "../models/productModel.js";
 import { orderModel, type IOrderItem } from "../models/orderModel.js";
 import { countryModel } from "../models/CountryModel.js";
@@ -42,6 +42,81 @@ export interface IAddItemToCart {
   productId: any;
   quantity: string;
 }
+
+
+const calcTotalAmount = (cart: ICart) =>
+  cart.items.reduce((acc, curr) => acc + curr.unitprice * curr.quantity, 0);
+
+export const addItemToCart = async ({
+  productId,
+  quantity,
+  userId,
+}: IAddItemToCart) => {
+  // تحويل الكمية إلى number
+  const qty = typeof quantity === "string" ? parseInt(quantity) : quantity;
+  if (isNaN(qty) || qty <= 0) {
+    return { data: "Invalid quantity", statusCode: 400 };
+  }
+
+  // جلب الكارت النشط
+  const cart = await getActiveCartForUser({ userId });
+  if (!cart) {
+    return { data: "Cart not found", statusCode: 404 };
+  }
+
+  // جلب المنتج
+  const product = await productModel.findById(productId);
+  if (!product) {
+    return { data: "Product doesn't exist", statusCode: 400 };
+  }
+
+  // التحقق إذا المنتج موجود بالفعل في الكارت
+  const item = cart.items.find(
+    (p) =>
+      p.product.toString() === productId.toString() || // لو مجرد ObjectId
+      p.product._id?.toString() === productId.toString() // لو populated
+  );
+
+  if (item) {
+    const totalQuantity = item.quantity + qty;
+    if (totalQuantity > product.stock) {
+      return { data: "Not enough stock", statusCode: 400 };
+    }
+
+    // تحديث الكمية
+    item.quantity = totalQuantity;
+    cart.totalAmount = calcTotalAmount(cart);
+    await cart.save();
+
+    return {
+      data: await getActiveCartForUser({ userId, populateAllowed: true }),
+      statusCode: 201,
+    };
+  }
+
+  // إضافة المنتج كـ item جديد إذا مش موجود
+  if (qty > product.stock) {
+    return { data: "Not enough stock", statusCode: 400 };
+  }
+
+  cart.items.push({
+    product: productId,
+    unitprice: product.onsale ? product.sale : product.price,
+    quantity: qty,
+  });
+
+  cart.totalAmount = calcTotalAmount(cart);
+  await cart.save();
+
+  return {
+    data: await getActiveCartForUser({ userId, populateAllowed: true }),
+    statusCode: 201,
+  };
+};
+
+
+/*add item to cart old 
+
 
 export const addItemToCart = async ({
   productId,
@@ -96,7 +171,7 @@ export const addItemToCart = async ({
     statusCode: 201,
   };
 };
-
+*/
 
 
 

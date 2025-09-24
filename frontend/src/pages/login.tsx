@@ -131,8 +131,8 @@ export default function LoginApp() {
           />
         </FormControl>
 
-        <Button variant="contained" onClick={submit} > Register</Button>
-
+        <Button variant="contained" onClick={submit} sx={{width:"100%"}} > Login </Button>
+            <Button variant='text' onClick={()=> navigate("/register")} sx={{color:"#000"}} >Not a member yet? Register now.</Button>
       </Box>
     </Container>
 

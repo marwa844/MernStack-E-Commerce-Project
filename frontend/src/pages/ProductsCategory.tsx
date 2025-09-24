@@ -9,13 +9,20 @@ export default function ProductsCategory(){
 
       const { id } = useParams(); // categoryId
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [categoryName, setCategoryName] = useState<string>("");
+
 
   useEffect(() => {
     if (id) {
       fetchCategoryProducts(id)
-        .then((data) => {setProducts(data)
-                        console.log("Products for category", id, data);}
-)
+        .then((data) => {
+          setProducts(data)
+           if (data.length > 0) {
+          setCategoryName(data[0].categoryId?.title || "");
+        }
+
+        }
+                        )
         .catch((err) => console.log(err));  
       
     }
@@ -24,11 +31,14 @@ export default function ProductsCategory(){
       
     return(
         <>
-             <Container sx={{marginTop:5}}>
 
+             <Container sx={{marginTop:5}}>
+<Typography variant="h4" sx={{textAlign:"center", marginBottom:"40px"}}>
+  {categoryName}
+  </Typography>
       <Grid container spacing={2}>
         {products.map((p) => (
-          <Grid size={{ xs: 2, md: 3 }}>
+          <Grid size={{ xs: 6, md: 3 }}>
             <ProductCard {...p}></ProductCard>
           </Grid>
         ))}

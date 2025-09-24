@@ -20,5 +20,10 @@ export declare const getSpecificProduct: ({ productId }: IProduct) => Promise<(i
 }> & {
     __v: number;
 }) | null>;
+export declare const getonsaleProducts: () => Promise<(import("mongoose").Document<unknown, {}, import("../models/productModel.js").IProduct, {}, {}> & import("../models/productModel.js").IProduct & Required<{
+    _id: unknown;
+}> & {
+    __v: number;
+})[]>;
 export {};
 //# sourceMappingURL=productServices.d.ts.map

@@ -1,3 +1,4 @@
+import { type ICart } from "../models/cartModel.js";
 export interface ICreateCart {
     userId: string;
 }
@@ -5,7 +6,7 @@ export interface IGetActiveCart {
     userId: string;
     populateAllowed?: boolean;
 }
-export declare const getActiveCartForUser: ({ userId, populateAllowed }: IGetActiveCart) => Promise<import("mongoose").Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+export declare const getActiveCartForUser: ({ userId, populateAllowed }: IGetActiveCart) => Promise<import("mongoose").Document<unknown, {}, ICart, {}, {}> & ICart & Required<{
     _id: unknown;
 }> & {
     __v: number;
@@ -19,7 +20,7 @@ export declare const addItemToCart: ({ productId, quantity, userId, }: IAddItemT
     data: string;
     statusCode: number;
 } | {
-    data: import("mongoose").Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+    data: import("mongoose").Document<unknown, {}, ICart, {}, {}> & ICart & Required<{
         _id: unknown;
     }> & {
         __v: number;
@@ -35,7 +36,7 @@ export declare const updateItemInCart: ({ userId, productId, quantity, }: Iupdat
     data: string;
     statusCode: number;
 } | {
-    data: import("mongoose").Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+    data: import("mongoose").Document<unknown, {}, ICart, {}, {}> & ICart & Required<{
         _id: unknown;
     }> & {
         __v: number;
@@ -50,7 +51,7 @@ export declare const deleteItemInCart: ({ userId, productId }: IDeleteItem) => P
     data: string;
     statusCode: number;
 } | {
-    data: import("mongoose").Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+    data: import("mongoose").Document<unknown, {}, ICart, {}, {}> & ICart & Required<{
         _id: unknown;
     }> & {
         __v: number;
@@ -61,7 +62,7 @@ interface IClearCart {
     userId: string;
 }
 export declare const claerCart: ({ userId }: IClearCart) => Promise<{
-    data: import("mongoose").Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+    data: import("mongoose").Document<unknown, {}, ICart, {}, {}> & ICart & Required<{
         _id: unknown;
     }> & {
         __v: number;

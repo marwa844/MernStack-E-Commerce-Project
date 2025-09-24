@@ -1,5 +1,7 @@
 import express from "express";
 import { login, register } from "../services/userservices.js";
+import { getUserOrders } from "../services/oderServices.js";
+import { jwtValidate } from "../middleware.ts/jwtMiddleware.js";
 export const userRoute = express.Router();
 // register route
 userRoute.post("/register", async (req, res) => {

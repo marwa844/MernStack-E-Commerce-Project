@@ -13,6 +13,7 @@ import { productRoute } from "./routes/productRoute.js";
 import { cartRouter } from "./routes/cartRoute.js";
 import { countryRoute } from "./routes/countryRoute.js";
 import { setCategory } from "./services/categoryServices.js";
+import { orderRouter } from "./routes/orderRoute.js";
 
 dotenv.config();
 const app = express();
@@ -49,6 +50,9 @@ app.use("/cart", cartRouter);
 
 // country router 
 app.use("/country", countryRoute);
+
+// order router 
+app.use("/order", orderRouter);
 
 
 app.listen(port, () => {

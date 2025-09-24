@@ -37,12 +37,19 @@ export const setInitialProducts = async () => {
         console.log("somthing went wrong");
     }
 };
+// get products by category
 export const getCategoryProducts = async ({ categoryId }) => {
-    const products = await productModel.find({ categoryId });
+    const products = await productModel.find({ categoryId }).populate("categoryId");
     return products;
 };
 export const getSpecificProduct = async ({ productId }) => {
-    const product = await productModel.findById(productId);
+    const product = await productModel
+        .findById(productId)
+        .populate("categoryId", "title");
     return product;
+};
+// get onsale products
+export const getonsaleProducts = async () => {
+    return await productModel.find({ onsale: true });
 };
 //# sourceMappingURL=productServices.js.map

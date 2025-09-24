@@ -12,6 +12,7 @@ import { productRoute } from "./routes/productRoute.js";
 import { cartRouter } from "./routes/cartRoute.js";
 import { countryRoute } from "./routes/countryRoute.js";
 import { setCategory } from "./services/categoryServices.js";
+import { orderRouter } from "./routes/orderRoute.js";
 dotenv.config();
 const app = express();
 const port = 3001;
@@ -42,7 +43,7 @@ app.use("/cart", cartRouter);
 // country router 
 app.use("/country", countryRoute);
 // order router 
-app.use("/order", orderRoute);
+app.use("/order", orderRouter);
 app.listen(port, () => {
     console.log("Server is working");
 });

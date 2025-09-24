@@ -8,12 +8,28 @@ export const setCategory = async () => {
     try {
         const categories = [
             {
-                title: "category1",
+                title: "Abaya",
                 image: "uploads/cat1.jpeg",
             },
             {
-                title: "category2",
+                title: "Dress",
                 image: "uploads/cat2.jpeg",
+            },
+            {
+                title: "Blouse",
+                image: "uploads/blouse.jpeg",
+            },
+            {
+                title: "Jacket",
+                image: "uploads/cat2.jpg",
+            },
+            {
+                title: "set",
+                image: "uploads/set.webp",
+            },
+            {
+                title: "Winter",
+                image: "uploads/winter.png",
             },
         ];
         const exitCategory = await getAllCategories();

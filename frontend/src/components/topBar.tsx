@@ -30,6 +30,8 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
+  const qtyItems = cartItems.reduce((acc:number, cur) => acc + cur.quantity ,0) ;
+
   const handleOpenNavMenu = (event: any) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -171,7 +173,7 @@ function ResponsiveAppBar() {
 
           <Box  sx={{display:"flex" , justifyContent:"center", alignItems:"center", flexGrow: 0 }}>
             <IconButton aria-label="cart" onClick={cartHandle}>
-              <Badge badgeContent={cartItems.length} color="secondary">
+              <Badge badgeContent={qtyItems} color="secondary">
                 <ShoppingCart  sx={{color:"#fff"}}/>
               </Badge>
             </IconButton>
@@ -205,7 +207,10 @@ function ResponsiveAppBar() {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <MenuItem onClick={handleCloseUserMenu}>
+                  <MenuItem onClick={()=>{
+                    navigate("/order");
+                    handleCloseUserMenu
+                  }}>
                     <Typography sx={{ textAlign: "center" }}>
                       My Orders
                     </Typography>

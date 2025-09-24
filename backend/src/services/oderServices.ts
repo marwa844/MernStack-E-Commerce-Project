@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { orderModel } from "../models/orderModel.js";
 
 interface IgetOrder {
@@ -17,16 +18,18 @@ export const getOrderById = async ({ userId, orderId }: IgetOrder) => {
      return { data: order, statusCode: 200 };
 }
 
-interface IUOrder {
+
+interface IUserOrder {
   userId: string;
 }
-export const getUserOrders = async ({ userId }: IUOrder) => {
-  // get oder
-   const order = await orderModel.findOne({ userId }).populate("country", "name code");
 
-    if (!order) {
-      return  { data: " Order not found " ,statusCode: 400 };
-
-    }
-
+export const getUserOrders = async () => {
+  try{
+ const orders = await orderModel.find()
+      return orders; 
+   
+  }catch(err){
+    throw err;
   }
+ 
+}

@@ -20,36 +20,56 @@ export const getActiveCartForUser = async ({ userId, populateAllowed }) => {
     }
     return getCart;
 };
+const calcTotalAmount = (cart) => cart.items.reduce((acc, curr) => acc + curr.unitprice * curr.quantity, 0);
 export const addItemToCart = async ({ productId, quantity, userId, }) => {
-    // get cart for user
-    const cart = await getActiveCartForUser({ userId });
-    console.log("Sending to backend:", { productId, quantity, userId });
-    // check item is exit in db
-    const item = cart.items.find((p) => p.product.toString() === productId);
-    if (item) {
-        return { data: " Item is already exit", statusCode: 400 };
+    // تحويل الكمية إلى number
+    const qty = typeof quantity === "string" ? parseInt(quantity) : quantity;
+    if (isNaN(qty) || qty <= 0) {
+        return { data: "Invalid quantity", statusCode: 400 };
     }
-    console.log("ProductId from front-end:", productId);
-    console.log("Type of ProductId:", typeof productId);
-    // check about item in db
+    // جلب الكارت النشط
+    const cart = await getActiveCartForUser({ userId });
+    if (!cart) {
+        return { data: "Cart not found", statusCode: 404 };
+    }
+    // جلب المنتج
     const product = await productModel.findById(productId);
     if (!product) {
-        return { data: " Product isn't exit", statusCode: 400 };
+        return { data: "Product doesn't exist", statusCode: 400 };
     }
-    if (product.stock < parseInt(quantity)) {
-        return { data: "low stock", statusCode: 400 };
+    // التحقق إذا المنتج موجود بالفعل في الكارت
+    const item = cart.items.find((p) => p.product.toString() === productId.toString() || // لو مجرد ObjectId
+        p.product._id?.toString() === productId.toString() // لو populated
+    );
+    if (item) {
+        const totalQuantity = item.quantity + qty;
+        if (totalQuantity > product.stock) {
+            return { data: "Not enough stock", statusCode: 400 };
+        }
+        // تحديث الكمية
+        item.quantity = totalQuantity;
+        cart.totalAmount = calcTotalAmount(cart);
+        await cart.save();
+        return {
+            data: await getActiveCartForUser({ userId, populateAllowed: true }),
+            statusCode: 201,
+        };
     }
-    // add item to cart
+    // إضافة المنتج كـ item جديد إذا مش موجود
+    if (qty > product.stock) {
+        return { data: "Not enough stock", statusCode: 400 };
+    }
     cart.items.push({
         product: productId,
         unitprice: product.onsale ? product.sale : product.price,
-        quantity: parseInt(quantity),
+        quantity: qty,
     });
-    // update to cart
-    cart.totalAmount += product.price * parseInt(quantity);
-    // const updateCart = await cart.save();
+    cart.totalAmount = calcTotalAmount(cart);
     await cart.save();
-    return { data: await getActiveCartForUser({ userId, populateAllowed: true }), statusCode: 201 };
+    return {
+        data: await getActiveCartForUser({ userId, populateAllowed: true }),
+        statusCode: 201,
+    };
 };
 export const updateItemInCart = async ({ userId, productId, quantity, }) => {
     //get cart for user
